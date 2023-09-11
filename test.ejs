@@ -1,0 +1,74 @@
+<%- include('./partials/head.ejs') %> <%- include('./partials/nav.ejs') %>
+
+<div class="sign-form">
+    <h1>Create Account</h1>
+    <form action="/auth/register" method="POST">
+        <input type="text" placeholder=" Username" name="userName" />
+        <% if(validation!==undefined){ %> <% let
+        userNameError=(validation.param==='userName' )? validation:false; %> <%
+        if(userNameError) { %>
+        <p><%= userNameError.msg %></p>
+        <% } %> <% } %>
+
+        <input type="email" placeholder=" E-mail" name="email" />
+
+        <% if(validation!==undefined){ %> <% let emailErrors=(validation.param==='email' )
+        ? validation:false; %> <% if(emailErrors) { %>
+        <p><%= emailErrors.msg %></p>
+        <% } %> <% } %>
+
+        <input
+            type="password"
+            placeholder=" Password"
+            name="password"
+            id="passwordInput" />
+
+        <span id="passwordToggle" class="password-toggle">
+            <i class="material-icons">visibility</i>
+        </span>
+
+        <% if(validation!==undefined){ %> <% let
+        passwordErrors=(validation.param==='password' )? validation:false; %> <%
+        if(passwordErrors) { %>
+        <p><%= passwordErrors.msg %></p>
+        <% } %> <% } %>
+
+        <input
+            type="password"
+            placeholder=" Confirm Password"
+            name="PasswordConfirmation" />
+            
+            <span id="passwordToggle" class="password-toggle">
+            <i class="material-icons">visibility</i>
+            </span>
+
+        <% if(validation!==undefined){ %> <% let
+        passwordConfErrors=(validation.param==='PasswordConfirmation' ) ?
+        validation:false; %> <% if(passwordConfErrors) { %>
+        <p><%= passwordConfErrors.msg %></p>
+        <% } %> <% } %>
+        
+        <button type="submit">Create</button>
+   
+    <div>
+        Already have an account ?
+        <a style="text-decoration: none" href="/login">Login</a>
+    </div> 
+    </form>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const passwordInput = document.getElementById("passwordInput");
+        const passwordToggle = document.getElementById("passwordToggle");
+
+        passwordToggle.addEventListener("click", function () {
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+            } else {
+                passwordInput.type = "password";
+            }
+        });
+    });
+</script>
+
+<%- include('./partials/footer.ejs') %>

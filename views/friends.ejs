@@ -1,0 +1,36 @@
+<%- include('./partials/head.ejs') %> <%- include('./partials/nav.ejs') %>
+
+
+<% if(friends?.length>0){ %>
+    <div class="container" style="width: 77%">
+      <div class="row">
+        <% for(let friend of friends){ %>
+        <div class="col col-12 col-md-6 col-lg-4 col-xl-3">
+          <div class="card" style="width: 16rem">
+            <img src="/images/<%=friend.image%>" height="200" class="card-img-top" alt="..." />
+            <div class="card-body">
+              <h5 class="card-title">
+                <a style="text-decoration: none" href="/users/<%= friend._id %>">
+                  <%=friend.name%>
+                </a>
+              </h5>
+              <form>
+                <input type="hidden" name="myId" value="<%= myId %>">
+                <button type="submit" formmethod="post" formaction="/friends/<%= friend._id %>" class="btn btn-danger">
+                    Unfriend
+                </button>
+                <button type="button"  class="btn btn-success">
+                    <a href="/chats/<%= friend.chatId %>">Chat</a>                  
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <% } %>
+      </div>
+    </div>
+    <% } else { %>
+    <div class="alert alert-danger">No friends avaliable</div>
+    <% } %>
+
+<%- include('./partials/footer.ejs') %>

@@ -1,0 +1,38 @@
+<%- include('./partials/head.ejs') %> <%- include('./partials/fp-nav.ejs') %>
+
+<div class="fp-main-div">
+  <div class="fp-container">
+    <div class="recover-header">
+      <h5>We'll send you a code to your email address</h5>
+    </div>
+    <hr class="hr-1" />
+
+    <div class="recover-mid">
+      <div class="recover-mid-1">
+        <div class="recover-mid-1-1">
+          <p>
+            We can send a login code to:
+            <%= user.email %>
+          </p>
+        </div>
+        <div class="recover-mid-1-2">
+          <img src="/images/<%= user.image  %>" alt="default-profile-picture" />
+        </div>
+      </div>
+    </div>
+
+    <hr class="hr-2">
+
+    <div class="fp-btns">
+      <form action="/auth/login/recover-email" method="post">
+       <input type="hidden" name="email" value="<%= user.email %>">
+      <button class="cancel-btn" type="button">
+        <a href="/auth/login">Cancel</a>
+      </button>
+      <button class="search-btn" type="submit">Continue</button>
+    </form>
+    </div>
+  </div>
+</div>
+
+<%- include('./partials/footer.ejs') %>

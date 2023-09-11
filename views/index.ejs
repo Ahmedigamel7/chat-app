@@ -1,0 +1,17 @@
+<%- include('./partials/head.ejs') %> <%- include('./partials/nav.ejs') %>
+
+<div class="container-2">
+  <h1>Online Friends</h1>
+  <button type="button"><a href="/chats/chat-group">Create Group</a></button>
+</div>
+
+<div class="container" style="width: 77%">
+  <div id="onlineFriends"></div>
+
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/sockets/socket_init.js"></script>
+<script src="/js/sockets/home.js"></script>
+
+<%- include('./partials/footer.ejs') %>

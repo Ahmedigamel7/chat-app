@@ -1,0 +1,27 @@
+<%- include('./partials/head.ejs') %> <%- include('./partials/nav.ejs') %>
+<% if(friends?.length> 0){ %>
+<div class="sign-form">
+  <form action="/chats/group" method="POST">
+    <input type="text" placeholder="Group name" name="name" autocomplete="off" />
+
+    <div class="parent-friends-list">
+      <ul id="friends-list" class="friends-list">
+        <% for(let friend of friends){ %>
+        <li class="nav-item">
+          <input type="checkbox" name="users" value="<%= friend._id %>" />
+          <img src="/images/<%=friend.image%>" alt="..." />
+          <a class="dropdown-item" href="/users/<%= friend._id %>">
+            <%= friend.name %>
+          </a>
+        </li>
+        <% }%>
+      </ul>
+    </div>
+    <button type="submit">Create</button>
+  </form>
+</div>
+<%} else { %>
+<div class="alert alert-danger">Add friends to create groups</div>
+<% } %>
+<script src="/socket.io/socket.io.js"></script>
+<%- include('./partials/footer.ejs') %>

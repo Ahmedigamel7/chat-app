@@ -1,0 +1,32 @@
+<%- include('./partials/head.ejs') %> <%- include('./partials/nav.ejs') %>
+
+<div class="fp-main-div">
+  <div class="fp-container">
+    <div class="top-header">
+      <h4>Find Your Account</h4>
+    </div>
+    <hr class="hr-1" />
+    <div class="header">
+      <h5>Please enter your email address to search for your account.</h5>
+    </div>
+
+    <form action="/auth/login/identify" method="post">
+      <div class="fp-input">
+        <input type="email" placeholder="Email address" name="email" />
+        <% if(validation && validation.param === 'email'){ %>
+        <p class="error-msg"><%= validation.msg %></p>
+        <% } %>
+      </div>
+
+      <hr class="hr-2" />
+      <div class="fp-btns">
+        <button class="cancel-btn" type="button">
+          <a href="/auth/login">Cancel</a>
+        </button>
+        <button class="search-btn" type="submit">Search</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('./partials/footer.ejs') %>

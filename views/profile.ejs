@@ -1,0 +1,62 @@
+<%- include('./partials/head.ejs') %> <%- include('./partials/nav.ejs') %>
+<div class="container-3">
+     <img src="/images/<%=(userImg || 'my-profile.png')%>" alt="Profile Picture" class="profile-pic" />
+     <h2 class="profile-name"><%= userName %></h2>
+     <!-- <p class="profile-status"><%#= isOnline %></p> -->
+
+     <div class="profile-details">
+          <label>Email</label>
+          <p><%= userEmail %></p>
+          <%#- console.log(locals) %>
+          <% if(!isOwner) {%>
+
+          <form method="post">
+               <input type="hidden" id="myId" name="myId" value="<%= myId %>" />
+               <input type="hidden" id="myName" name="myName" value="<%= myName %>" />
+               <input type="hidden" id="myImg" name="myImg" value="<%= myImg %>" />
+               <input type="hidden" id="userId" name="userId" value="<%= userId %>" />
+               <input type="hidden" id="userName" name="userName" value="<%= userName %>" />
+               <input type="hidden" id="userImg" name="userImg" value="<%= userImg %>" />
+
+               <div id="friends-form" class="profile-buttons">
+                    <% if(isFriend) {%>
+                    <input
+                         type="submit"
+                         class="red-button"
+                         value="Delete"
+                         formaction="/friends/delete"
+                    />
+                    <%} else if(isReqSent) {%>
+                    <input
+                         type="submit"
+                         class="red-button"
+                         value="Cancel"
+                         formaction="/friends/cancel"
+                    />
+                    <%} else if(isReqRecieved) {%>
+                    <input
+                         type="submit"
+                         class="green-button"
+                         value="Accept"
+                         formaction="/friends/accept"
+                    />
+                    <input
+                         type="submit"
+                         class="red-button"
+                         value="reject"
+                         formaction="/friends/reject"
+                    />
+                    <% } else {%>
+                    <input id="addBtn" type="submit" class="blue-button" value="Add" />
+                    <% } %>
+               </div>
+          </form>
+          <% } %>
+     </div>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/sockets/socket_init.js"></script>
+<% if(!isOwner && !isFriend && !isReqSent && !isReqRecieved) {%>
+<script src="/js/sockets/friend.socket.js"></script>
+
+<% } %> <%- include('./partials/footer.ejs') %>

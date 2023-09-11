@@ -1,0 +1,38 @@
+<%- include('./partials/head.ejs') %> <%- include('./partials/nav.ejs') %>
+
+<div class="container-2">
+    <button type="button"><a href="/chats/chat-group">Create Group</a></button>
+</div>
+
+<% if(chatGroups?.length>0){ %>
+<div class="container" style="width: 77%">
+  <div class="row">
+    <% for(let chatGroup of chatGroups){ %>
+    <div class="col col-12 col-md-6 col-lg-4 col-xl-3">
+      <div class="card" style="width: 16rem">
+        <img src="/images/<%=chatGroup.group.image%>" height="200" class="card-img-top" alt="..." />
+        <div class="card-body text-center">
+          <h5 class="card-title">
+            <a style="text-decoration: none" href="/chats/<%= chatGroup._id %>">
+              <%=chatGroup.group.name%>
+            </a>
+          </h5>
+          <form>
+              <input type="hidden" name="myId" value="<%= myId %>">
+            <button type="submit" formmethod="post" formaction="/chats/<%= chatGroup._id %>/leave" class="btn btn-danger">
+              Leave
+            </button>
+            <button type="button" class="btn btn-success">
+              <a href="/chats/<%= chatGroup._id %>">Visit</a>
+            </button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+    <% } %>
+  </div>
+</div>
+<% } else { %>
+<div class="alert alert-danger">No groups avaliable</div>
+<% } %> <%- include('./partials/footer.ejs') %>

@@ -1,0 +1,46 @@
+<%- include('./partials/head.ejs') %>
+<%- include('./partials/nav.ejs') %>
+
+<div class="update-password-form">
+  <form>
+    
+    <% if(error !== undefined){ %>
+    <div class="alert alert-danger"><%= error.msg %></div>
+    <% } %>
+    <input type="password" placeholder=" New password" name="password" id="passwordInput" />
+
+    <span id="passwordToggle" class="password-toggle">
+      <i class="fas fa-eye"></i>
+    </span>
+
+    <% if(validation!==undefined){ %>
+    <% let passwordErrors=(validation.param==='password' )? validation:false; %>
+    <% if(passwordErrors) { %>
+    <p class="error-msg">
+      <%= passwordErrors.msg %>
+    </p>
+    <% } %>
+    <% } %>
+
+    <input type="password" placeholder=" Confirm Password" name="confirmPassword" id="confPasswordInput" />
+
+    <span id="confPasswordToggle" class="password-toggle">
+      <i class="fas fa-eye"></i>
+    </span>
+
+    <% if(validation!==undefined){ %>
+    <% let passwordConfErrors=(validation.param==='confirmPassword' ) ? validation:false; %>
+    <% if(passwordConfErrors) { %>
+    <p class="error-msg">
+      <%= passwordConfErrors.msg%>
+    </p>
+    <% } %>
+    <% } %>
+
+    <button type="submit" formaction="/auth/login/reset/password/<%=resetPasswordToken%>" formmethod="POST">Confirm</button>
+
+  </form>
+</div>
+
+<script src="/js/showPassword.js"></script>
+<%- include('./partials/footer.ejs') %>

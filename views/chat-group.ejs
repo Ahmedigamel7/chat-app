@@ -1,0 +1,70 @@
+<%- include('./partials/head.ejs') %> <%- include('./partials/nav.ejs') %> <%#-
+console.log(JSON.stringfy(locals))%>
+<div class="chat-section">
+  <div class="chat-header">
+    <% if(groupName && groupImage) {%>
+    <img src="/images/<%= groupImage %>" alt="image.." />
+
+    <h1><%= groupName %></h1>
+    <button id="call" class="video-call-btn">
+      <i class="fas fa-video"></i>
+    </button>
+    <a class="btn btn-danger" href="/">Close</a>
+    <% } %>
+  </div>
+  <div id="video-container" class="hidden">
+    <video id="main-video" autoplay></video>
+    <button id="close-video-btn" class="btn btn-danger">Close</button>
+  </div>
+
+  <div id="chatMessage" class="chat-messages">
+    <input type="hidden" id="chatId" value="<%= chatId %>" />
+    <input type="hidden" id="myId" value="<%= myId %>" />
+
+    <% if(messages.length > 0){ %>
+    <% let prevDate = new Date(0).toLocaleDateString(); %>
+    <% for(let message of messages) {%>
+    <% let currentDate = new Date(message.updatedAt).toLocaleDateString() %>
+    <%  if( prevDate < currentDate && prevDate !== currentDate ) { %>
+    <div class="message-date"> <%= currentDate %> </div>
+    <% } %>
+    <% prevDate = currentDate; %>
+
+    <% if(String(message.sender._id) !== String(myId)) {%>
+
+    <div id="messageReceived" class="message received">
+      <div class="message-header">
+        <img src="/images/<%=message.sender.image%>" alt="friend-image" />
+        <span><%= message.time %></span>
+      </div>
+      <p><%= message.content %></p>
+    </div>
+
+    <% } else if (String(message.sender._id) === String(myId)){%>
+    <div id="messageSent" class="message sent">
+      <div class="message-header">
+        <img src="/images/<%=message.sender.image%>" alt="my-image" />
+        <span><%= message.time %></span>
+      </div>
+      <p><%= message.content %></p>
+    </div>
+    <% } %>
+    <% } %>
+<% } %>
+  </div>
+  <div class="chat-input">
+    <label for="attachment" class="attachment-button">
+      <i class="fas fa-paperclip"></i>
+    </label>
+    <input type="file" id="attachment">
+    <textarea type="text" id="message" placeholder="Type a message" spellcheck="true" autocomplete="on" maxlength="1000" dir="auto"></textarea>
+    <button id="sendBtn"><i class="fas fa-paper-plane"></i></button>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+<script src="/js/sockets/chat.js"></script>
+<script src="/js/sockets/group.js"></script>
+
+<%- include('./partials/footer.ejs') %>
