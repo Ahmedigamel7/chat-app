@@ -55,8 +55,8 @@
      </div>
 </div>
 <script src="/socket.io/socket.io.js"></script>
-<script src="/js/sockets/socket_init.js"></script>
+<script src="/js/sockets/socket_init.js" type="module"></script>
 <% if(!isOwner && !isFriend && !isReqSent && !isReqRecieved) {%>
-<script src="/js/sockets/friend.socket.js"></script>
+<script src="/js/sockets/friend.socket.js" type="module"></script>
 
 <% } %> <%- include('./partials/footer.ejs') %>

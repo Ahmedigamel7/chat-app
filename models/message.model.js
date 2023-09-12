@@ -15,13 +15,6 @@ const Message = mongoose.model("Message", messagesSchema);
 
 async function getMessages(chaId) {
      try {
-          console.log("getmes ChatId", chaId);
-          // const newChat = new Message({
-          //      chat: "64135cfcce20547eaa41e9dd",
-          //      content: "hell",
-          //      sender: "64135ccdce20547eaa41e9c3",
-          // });
-          // await newChat.save();
           const messages = await Message.findById( chaId ).populate({
                path: "chatId", //field
                model: "Chat", //model
@@ -31,7 +24,6 @@ async function getMessages(chaId) {
                     select: "userName image",
                },
           });
-
           return messages;
      } catch (error) {
           console.error(error);
@@ -40,7 +32,6 @@ async function getMessages(chaId) {
 }
 async function newMessage(msg) {
      try {
-          console.log("newMsg", msg);
           const newMsg = new Message(msg);
           const msgDoc =await newMsg.save();
           const result= await msgDoc.populate({  path: "sender", model: "User", select: "image" })

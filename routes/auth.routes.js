@@ -17,16 +17,14 @@ router.get("/register", notAuth, (req, res, next) => {
      try {
           const validation = req.flash("register")[0];
           const inputs = req.flash("inputs");
-     
+          console.log(validation)
           if (validation) {
                let statusCode = 422;
-     
+
                // check if duplicate username or email address
-               let conflict = false;
                if (validation.msg === "The username is unavailable" || validation.msg === "Email already exists")
-                    conflict = true;
-     
-               if (conflict) statusCode = 409;
+                    statusCode = 409;
+
                return res.status(statusCode).render("register", {
                     isUser: req.session.userId || null,
                     validation,
@@ -43,7 +41,7 @@ router.get("/register", notAuth, (req, res, next) => {
      } catch (error) {
           next(error)
      }
-    
+
 });
 
 router.post("/register", notAuth, registerValidation, async (req, res, next) => {
@@ -58,9 +56,9 @@ router.post("/register", notAuth, registerValidation, async (req, res, next) => 
                const user = await User.findOne({ $or: [{ email: reqUser.email }, { userName: reqUser.userName }] });
                if (user) {
                     //which input is already exists.
-                    let { param, msg } = user.userName === reqUser.userName ? { param: 'userName', msg: 'The username is unavailable' }
-                         : { param: 'email', msg: 'Email already exists' };
-                    req.flash('register', [{ param, msg }])
+                    let { path, msg } = user.userName === reqUser.userName ? { path: 'userName', msg: 'The username is unavailable' }
+                         : { path: 'email', msg: 'Email already exists' };
+                    req.flash('register', [{ path, msg }])
                     req.flash("inputs", get_user_input(req?.body))
                     return res.redirect('/auth/register')
                }
@@ -101,12 +99,12 @@ router.post("/login", notAuth, loginValidation, async (req, res, next) => {
           try {
                const user = await User.findOne({ email: req.body.email });
                if (!user) {
-                    req.flash('login', [{ param: 'email', msg: "Invalid username or password" }])
+                    req.flash('login', [{ path: 'email', msg: "Invalid username or password" }])
                     return res.redirect('/auth/login');
                }
                const correctPass = await bcrypt.compare(req.body.password, user.password);
                if (!correctPass) {
-                    req.flash('login', [{ param: 'email', msg: "Invalid username or password" }])
+                    req.flash('login', [{ path: 'email', msg: "Invalid username or password" }])
                     return res.redirect('/auth/login');
                }
                req.session.userId = user._id;
@@ -145,7 +143,7 @@ router.post('/login/identify', notAuth, emailValidation, async (req, res, next) 
                const isUser = await User.findOne({ email: req.body.email });
                if (!isUser) {
                     const error = {
-                         param: 'email', msg: new Error("Email doesn't exists").message
+                         path: 'email', msg: new Error("Email doesn't exists").message
                     }
 
                     req.flash("identifyUser", error);

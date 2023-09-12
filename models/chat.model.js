@@ -51,8 +51,6 @@ async function getUsersAndMessages(chatId) {
                     model: "User",
                     select: "userName image",
                })
-          // console.log("New data", data, "\n");
-
           return data;
      } catch (error) {
           console.error(error);

@@ -34,19 +34,19 @@ const userSchema = new Schema(
                          chatId: ObjectId,
                     },
                ],
-              default: ()=>[],
+               default: () => [],
           },
           friendReqs: {
                type: [
                     { name: String, image: String, _id: ObjectId },
                ],
-              default: ()=>[],
+               default: () => [],
           },
           sentReqs: {
                type: [
                     { name: String, image: String, _id: ObjectId },
                ],
-              default: ()=>[],
+               default: () => [],
           },
      },
      {
@@ -80,79 +80,51 @@ const userSchema = new Schema(
 
 async function sendReqs(data) {
      try {
-          await User.updateOne(
-               { _id: data.userId },
-               {
-                    $push: {
-                         friendReqs: {
-                              _id: new ObjectId(data.myId),
-                              name: data.myName,
-                              image: data.myImg,
+        return  await Promise.all([
+               await User.updateOne(
+                    { _id: data.userId },
+                    {
+                         $push: {
+                              friendReqs: {
+                                   _id: new ObjectId(data.myId),
+                                   name: data.myName,
+                                   image: data.myImg,
+                              },
                          },
-                    },
-               }
-          );
-
-          await User.updateOne(
-               { _id: data.myId },
-               {
-                    $push: {
-                         sentReqs: {
-                              _id: new ObjectId(data.userId),
-                              name: data.userName,
-                              image: data.userImg,
+                    }
+               ),
+               await User.updateOne(
+                    { _id: data.myId },
+                    {
+                         $push: {
+                              sentReqs: {
+                                   _id: new ObjectId(data.userId),
+                                   name: data.userName,
+                                   image: data.userImg,
+                              },
                          },
-                    },
-               }
-          );
-          // return res.redirect("/profile/" + data.userId);
-          return;
+                    }
+               )
+          ])
      } catch (error) {
           console.log(error);
-          return next(error);
      }
 }
 
 async function getOnlineFriends(id) {
      try {
-          return await User.findOne({ _id: id }, { friends: true });
+          return await User.findById(id, { friends: true });
      } catch (error) {
-          console.log(error);
-          return next(error);
+          throw error;;
      }
 }
 async function search_username(data) {
-     try {     
-          return await User.find({ userName: { $regex: data.userName,$options: 'i' }, _id: { $ne: data.myId } })
+     try {
+          return await User.find({ userName: { $regex: data.userName, $options: 'i' }, _id: { $ne: data.myId } })
 
      } catch (error) {
           console.log(error)
      }
 }
-
 const User = mongoose.model("User", userSchema);
-
-// const user = new User({
-//      userName: "ahmedgamel",
-//      email: "ahmed@yahoo.com",
-//      password: "$2b$13$tvMDZBkdwSrLMrkJCdpNzuk47JlcNaTHKdEGt6EqR5s1/5ZG8tk2C",
-//      image: "my-profile.png",
-// });
-// User.insertMany([
-//      {
-//           userName: "ahmedgamel",
-//           email: "ahmed@yahoo.com",
-//           password:
-//                "$2b$13$tvMDZBkdwSrLMrkJCdpNzuk47JlcNaTHKdEGt6EqR5s1/5ZG8tk2C",
-//           image: "my-profile.png",
-//      },
-//      {
-//           userName: "ahmedibraim",
-//           email: "www@oulook.com",
-//           password:
-//                "$2b$13$KtPxhMt3fLhlxqCv5Br6OOgZ74TUhPwIyoJsOTNEghGrOQGRTSg/q",
-//           image: "my-profile.png",
-//      },
-// ]).then((p) => console.log(p));
-// user.save().then((p) );
 module.exports = { User, sendReqs, getOnlineFriends, search_username };

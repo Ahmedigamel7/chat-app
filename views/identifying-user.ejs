@@ -13,7 +13,7 @@
     <form action="/auth/login/identify" method="post">
       <div class="fp-input">
         <input type="email" placeholder="Email address" name="email" />
-        <% if(validation && validation.param === 'email'){ %>
+        <% if(validation && validation.path === 'email'){ %>
         <p class="error-msg"><%= validation.msg %></p>
         <% } %>
       </div>

@@ -11,6 +11,9 @@ const videoPlayer = document.getElementById("main-video");
 // const openButton = document.getElementById("call");
 const closeBtn = document.getElementById("close-video-btn");
 
+import { handle_friend_reqs } from "./funcs.js";
+handle_friend_reqs(socket);
+
 chatMessages.scrollTop = chatMessages.scrollHeight;
 
 function closeVideo() {
@@ -21,12 +24,10 @@ function closeVideo() {
   peer.destroy();
   videoContainer.classList.add("hidden");
 
-  location.reload();
+  // location.reload();
 
   // window.location = window.location;
 }
-
-// console.log(chatMessage);
 
 socket.emit("joinChat", chatId);
 
@@ -46,13 +47,10 @@ sendBtn.onclick = () => {
     );
   }
 };
-// const dt = new Date();
-// console.log(dt.getTimezoneOffset())
-socket.on("newMessage", (msg) => {
-  // console.log("newMSSSG", msg.sender, myId);
-  if (String(msg.senderId) !== myId) {
-//     console.log("notme", msg.content);
 
+socket.on("newMessage", (msg) => {
+  // console.log("newMSSSG", msg.senderId, myId);
+  if (String(msg.senderId) !== myId) {
     chatMessage.innerHTML += `<div id="messageReceived" class="message received">
           <div class="message-header">
           <img src="/images/${msg.image}" alt="friend-image" /> 
@@ -61,7 +59,6 @@ socket.on("newMessage", (msg) => {
           <p> ${msg.content} </p>
           </div> `;
   } else if (String(msg.senderId) === myId) {
-//     console.log("me", msg.content);
     chatMessage.innerHTML += `<div id="messageSent" class="message sent">
           <div class="message-header">
           <img src="/images/${msg.image}" alt="friend-image" /> 
@@ -72,18 +69,19 @@ socket.on("newMessage", (msg) => {
   }
   chatMessages.scrollTop = chatMessages.scrollHeight;
 });
-//"id", {
+
+// "id", {
 //      host: "localhost",
 //      port: 443,
 //      secure: true,
 // }
 
-// function showCall(stream) {
-//      let video = document.createElement("video");
-//      video.srcObject = stream;
-//      document.body.append(video);
-//      video.play();
-// }
+function showCall(stream) {
+     let video = document.createElement("video");
+     video.srcObject = stream;
+     document.body.append(video);
+     video.play();
+}
 let peer = new Peer();
 let peerId = null;
 peer.on("open", (id) => {
@@ -135,8 +133,10 @@ peer.on("call", (call) => {
         videoPlayer.srcObject = remoteStream;
       });
       call.on("close", () => {
+
         const tracks = stream.getTracks();
         tracks.forEach((track) => track.stop());
+      
       });
     })
     .catch((err) => console.error(err));

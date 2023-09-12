@@ -1,8 +1,8 @@
 const { newMessage } = require("../models/message.model");
 
-exports.manageChat = (io) => {
-     io.on("connection", (socket) => {
+exports.manageChat = (io,socket) => {
           socket.on("joinChat", (chatId) => {
+               console.log('socketId',socket.id )
                socket.join(chatId);
           });
           socket.on("sendMessage", (msg, deleteMsg) => {
@@ -26,5 +26,4 @@ exports.manageChat = (io) => {
           socket.on("videoClosed", (chatId) => {
                socket.broadcast.to(chatId).emit("closeVideo");
           });
-     });
 };

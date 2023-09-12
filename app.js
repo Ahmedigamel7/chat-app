@@ -17,15 +17,16 @@ const options = {
      key: fs.readFileSync("key.pem"),
      cert: fs.readFileSync("cert.pem"),
 };
-// const http = require("http");
+
 const express = require("express");
 const app = express();
+const port = process.env.PORT || 5555;
 const server = https.createServer(options, app);
 
-const socketIO = require("socket.io");
-// const {Server} = require("socket.io");
-const io = socketIO(server);
-const port = process.env.PORT || 5555;
+const { Server } = require("socket.io");
+const io = new Server(server);
+
+
 const morgan = require("morgan");
 const session = require("express-session");
 const flash = require("connect-flash");
@@ -43,14 +44,19 @@ const friendsRouter = require("./routes/friends.routes");
 const { User } = require("./models/user.model");
 const { manageChat } = require("./sockets/chat.socket");
 const { manage_search } = require("./sockets/search.socket");
+const { mongoDB_init } = require("./helpers/mongo_init");
 
 
 io.onlineUsers = {};
-init(io);
-manageFriends(io);
-manageChat(io);
-manage_search(io);
+const onConnection = (socket) => {
+     console.log("a user connected")
+     init(io, socket);
+     manageFriends(io, socket);
+     manageChat(io, socket);
+     manage_search(socket);
+}
 
+io.on("connection", onConnection);
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/images", express.static("images"));
@@ -63,6 +69,7 @@ const mongoStore = new SessionStore({
      uri: process.env.MONGO_URI,
      collection: "Sessions",
 });
+
 app.use(
      session({
           name: "SID",
@@ -77,7 +84,7 @@ app.use(
 app.use(flash());
 app.use(morgan("dev"));
 
-                     
+
 
 app.use(async (req, res, next) => {
      try {
@@ -87,17 +94,23 @@ app.use(async (req, res, next) => {
                     friendReqs: true,
                });
                // console.log(user.friendReqs);
-               req.friendReqs = user?.friendReqs ;
+               req.friendReqs = user?.friendReqs;
                return next();
           } else {
                return next();
           }
      } catch (error) {
-          console.error(error);
+          // console.error(error);
           return next(error);
      }
 });
+app.get('/error', (req, res) => {
+     res.status(500).render("500", {
+          isUser: req.session.userId || null,
+          friendReqs: req.friendReqs || null,
 
+     })
+})
 app.use("/auth", authRouter);
 app.use("/", homeRouter);
 app.use("/users", usersRouter);
@@ -107,32 +120,36 @@ app.use("/friends", friendsRouter);
 
 
 app.use((error, req, res, next) => {
-     try {
-          console.log(error)
-          res.status(error?.status || 500);
+     console.log(error)
+     res.status(error?.status || 500);
+     // res.location('/error'); // Set the location header
+     res.render("500", {
+          error: {
+               status: error?.status || 500,
+               msg: error?.message || error?.msg || "Somthing went wrong, please try again",
+          },
+          friendReqs: req.friendReqs || null,
+          isUser: req.session.userId || null,
+     });
 
-          res.location = '/error'
-          return  res.render("error", {
-               error: {
-                    status: error?.status || 500,
-                    msg: error?.message || error?.msg|| "Somthing went wrong, please try again",
-               },
-               friendReqs: req.friendReqs || null,
-               isUser: req.session.userId || null,
-          });
-     } catch (error) {
-          next(error)
-     }
 });
 
 app.use(function (req, res, next) {
-     res.location=req.url
-   return  res.status(404).render("404", {
+     const location = req.url;
+     res.location(location);
+     return res.status(404).render("404", {
           friendReqs: req.friendReqs || null,
           isUser: req.session.userId || null,
      });
 });
 
-server.listen(port, () =>
-     console.log(`listen on port ${port}`)
-);
+
+
+(async () => {
+     try {
+          await mongoDB_init()
+          server.listen(port, () => { console.log(`listen on port ${port}`) });
+     } catch (error) {
+          console.log(error)
+     }
+})()
