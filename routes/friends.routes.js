@@ -16,40 +16,6 @@ router.get("/", isAuth, async (req, res, next) => {
           myId: req.session.userId
      });
 });
-
-// router.post("/add", isAuth, async (req, res, next) => {
-//      try {
-//           await User.updateOne(
-//                { _id: req.body.userId },
-//                {
-//                     $push: {
-//                          friendReqs: {
-//                               _id: new ObjectId(req.body.myId),
-//                               name: req.body.myName,
-//                               image: req.body.myImg,
-//                          },
-//                     },
-//                }
-//           );
-
-//           await User.updateOne(
-//                { _id: req.body.myId },
-//                {
-//                     $push: {
-//                          sentReqs: {
-//                               _id: new ObjectId(req.body.userId),
-//                               name: req.body.userName,
-//                               image: req.body.userImg,
-//                          },
-//                     },
-//                }
-//           );
-//           return res.redirect("/users/" + req.body.userId);
-//      } catch (error) {
-//           console.log(error);
-//           return next(error);
-//      }
-// });
 router.post("/cancel", isAuth, async (req, res, next) => {
      try {
           await User.updateOne(
@@ -74,7 +40,6 @@ router.post("/cancel", isAuth, async (req, res, next) => {
           );
           return res.redirect("/users/" + req.body.userId);
      } catch (error) {
-          console.log(error);
           return next(error);
      }
 });
@@ -102,7 +67,6 @@ router.post("/delete", isAuth, async (req, res, next) => {
           );
           return res.redirect("/users/" + req.body.userId);
      } catch (error) {
-          console.log(error);
           return next(error);
      }
 });
@@ -144,7 +108,6 @@ router.post("/accept", isAuth, async (req, res, next) => {
           );
           return res.redirect("/users/" + req.body.userId);
      } catch (error) {
-          console.log(error);
           return next(error);
      }
 });
@@ -173,7 +136,6 @@ router.post("/reject", isAuth, async (req, res, next) => {
           );
           return res.redirect("/users/" + req.body.userId);
      } catch (error) {
-          console.log(error);
           return next(error);
      }
 });
@@ -204,7 +166,6 @@ router.post('/:id', isAuth, async (req, res, next) => {
                )])
           return res.redirect("/friends");
      } catch (error) {
-          console.log(error);
           return next(error);
      }
 })

@@ -1,8 +1,6 @@
 const { sendReqs, getOnlineFriends } = require("../models/user.model");
 exports.manageFriends = (io, socket) => {
-     console.log("manageFriends");
      socket.on("sentFriendReq", (data) => {
-          // console.log("sent", data);
           sendReqs(data)
                .then(() => {
                     socket.emit("reqSent");
@@ -18,11 +16,9 @@ exports.manageFriends = (io, socket) => {
      socket.on("getOnlineFriends", (myId) => {
           getOnlineFriends(myId)
                .then((data) => {
-                    // console.log("friends", data.friends);
                     const onlineFriends = data.friends.filter(
                          (friend) => io.onlineUsers[friend._id]
                     );
-                    // console.log("online", onlineFriends);
                     socket.emit("onlineFriends", onlineFriends);
                })
                .catch((err) => {

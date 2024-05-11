@@ -38,13 +38,11 @@ router.post(
                     Array.isArray(value) &&
                     value.some((id) => !/^[0-9a-fA-F]{24}$/.test(id))
                ) {
-                    console.log("array but not ids");
                     throw new Error("not valid array");
                } else if (
                     typeof value === "string" &&
                     !/^[0-9a-fA-F]{24}$/.test(value)
                ) {
-                    console.log("string but not id");
                     throw new Error("not valid string");
 
                } else return true;
@@ -109,7 +107,6 @@ router.get("/:id", isAuth, param('id').isMongoId(), async (req, res, next) => {
           if (!validationResult(req).isEmpty()) return res.redirect("/chats/not-found");
           const { id } = req.params;
           const chatData = await getUsersAndMessages(id);
-          // console.log(JSON.stringify(chatData, null, 4));
 
           if (chatData) {
                if (chatData?.messages?.length > 0)

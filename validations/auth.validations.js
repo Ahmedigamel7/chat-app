@@ -69,11 +69,11 @@ exports.newPasswordValidation = [
 
      body(
           "password",
-          "Enter a combination of at least 6 numbers, letters and punctuation marks (such as ! and &)"
+          "Enter a combination of digits, letters (A-Z, a-z)"
      )
           .custom((value) => {
                const regex =
-                    /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!&])[a-zA-Z\d!&]{6,}$/;
+               /^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z0-9]{6,20}$/;
                if (value && regex.test(value)) return true;
                else return false;
           })

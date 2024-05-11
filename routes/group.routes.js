@@ -6,7 +6,6 @@ router.get("/", isAuth, async (req, res, next) => {
      try {
           const chatGroups = await Chat.find({ users: req.session.userId, 'group.name': { $exists: true } })
 
-          // console.log(JSON.stringify(chatGroups, null, 2));
           res.render("groups", {
                isUser: req.session.userId || null,
                friendReqs: req.friendReqs || null,
@@ -17,8 +16,6 @@ router.get("/", isAuth, async (req, res, next) => {
           next(error)
      }
 });
-
-
 
 
 

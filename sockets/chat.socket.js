@@ -2,7 +2,6 @@ const { newMessage } = require("../models/message.model");
 
 exports.manageChat = (io,socket) => {
           socket.on("joinChat", (chatId) => {
-               console.log('socketId',socket.id )
                socket.join(chatId);
           });
           socket.on("sendMessage", (msg, deleteMsg) => {

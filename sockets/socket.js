@@ -1,5 +1,4 @@
 exports.init = (io, socket) => {
-     console.log("init");
      socket.on("goOnline", (id) => {
           io.onlineUsers[id] = true;
      });
