@@ -11,17 +11,13 @@ process.on("unhandledRejection", (reason, promise) => {
 require("dotenv").config();
 require("./helpers/mongo_init");
 const path = require("path");
-const https = require("https");
-const fs = require("fs");
-const options = {
-     key: fs.readFileSync("key.pem"),
-     cert: fs.readFileSync("cert.pem"),
-};
+const http = require("http");
+
 
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 5555;
-const server = https.createServer(options, app);
+const server = http.createServer(app);
 
 const { Server } = require("socket.io");
 const io = new Server(server);
@@ -93,14 +89,12 @@ app.use(async (req, res, next) => {
                     _id: false,
                     friendReqs: true,
                });
-               // console.log(user.friendReqs);
                req.friendReqs = user?.friendReqs;
                return next();
           } else {
                return next();
           }
      } catch (error) {
-          // console.error(error);
           return next(error);
      }
 });
@@ -122,7 +116,6 @@ app.use("/friends", friendsRouter);
 app.use((error, req, res, next) => {
      console.log(error)
      res.status(error?.status || 500);
-     // res.location('/error'); // Set the location header
      res.render("500", {
           error: {
                status: error?.status || 500,

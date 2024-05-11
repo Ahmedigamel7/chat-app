@@ -137,7 +137,6 @@ router.post("/logout", isAuth, async (req, res, next) => {
                     await log.error("DESTROYING SESSION", { err })
                     return next(err);
                }
-               await log.info('USER LOGGED OUT', { id: req.session.userId, username: req.session.name })
                return res.redirect("/auth/login");
           });
      } catch (error) {
