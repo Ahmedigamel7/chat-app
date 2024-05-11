@@ -15,7 +15,7 @@ const Message = mongoose.model("Message", messagesSchema);
 
 async function getMessages(chaId) {
      try {
-          const messages = await Message.findById( chaId ).populate({
+          const messages = await Message.findById(chaId).populate({
                path: "chatId", //field
                model: "Chat", //model
                populate: {
@@ -37,7 +37,7 @@ async function newMessage(msg) {
           const result= await msgDoc.populate({  path: "sender", model: "User", select: "image" })
           result['time']= extractTime(result.updatedAt)
           return {chatId:msg.chatId, image:result.sender.image,content:msg.content, senderId:result.sender._id, time:result.time};
-     
+
      } catch (error) {
           throw new Error(error);
      }

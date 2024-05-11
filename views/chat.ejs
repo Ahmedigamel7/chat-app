@@ -21,17 +21,15 @@
 
   <div id="chatMessage" class="chat-messages">
     <input type="hidden" id="chatId" value="<%= chatId %>" />
-    <input type="hidden" id="myId" value="<% myId %>">
+    <input type="hidden" id="myId" value="<% myId %>" />
 
-    <% if(messages.length > 0){ %>
-    <% let prevDate = new Date(0).toLocaleDateString(); %>
-    <% for(let message of messages) {%>
-    <% let currentDate = new Date(message.updatedAt).toLocaleDateString() %>
-    <%  if( prevDate < currentDate && prevDate !== currentDate ) { %>
-    <div class="message-date"> <%= currentDate %> </div>
-    <% } %>
-    <% prevDate = currentDate; %>
-    <% if(String(message.sender._id) !== String(myId)) {%>
+    <% if(messages.length > 0){ %> <% let prevDate = new
+    Date(0).toLocaleDateString(); %> <% for(let message of messages) {%> <% let
+    currentDate = new Date(message.updatedAt).toLocaleDateString() %> <% if(
+    prevDate < currentDate && prevDate !== currentDate ) { %>
+    <div class="message-date"><%= currentDate %></div>
+    <% } %> <% prevDate = currentDate; %> <% if(String(message.sender._id) !==
+    String(myId)) {%>
 
     <div id="messageReceived" class="message received">
       <div class="message-header">
@@ -39,6 +37,7 @@
         <span><%= message.time %></span>
       </div>
       <p><%= message.content %></p>
+
     </div>
 
     <% } else if (String(message.sender._id) === String(myId)){%>
@@ -47,17 +46,16 @@
         <img src="/images/<%=message.sender.image%>" alt="my-image" />
         <span><%= message.time %></span>
       </div>
+     
       <p><%= message.content %></p>
     </div>
-    <% } %>
-    <% } %>
-    <% } %>
+    <% } %> <% } %> <% } %>
   </div>
   <div class="chat-input">
     <label for="attachment" class="attachment-button">
       <i class="fas fa-paperclip"></i>
     </label>
-    <input type="file" id="attachment">
+    <input type="file" name="files[]" id="attachment" multiple />
     <textarea type="text" id="message" placeholder="Type a message" spellcheck="true" autocomplete="on" maxlength="1000" dir="auto"></textarea>
     <button id="sendBtn"><i class="fas fa-paper-plane"></i></button>
   </div>

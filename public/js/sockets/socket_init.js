@@ -15,4 +15,5 @@ handle_friend_reqs(socket)
 
 
 import { get_users_by_username } from "./funcs.js";
-get_users_by_username(socket)
+
+get_users_by_username(socket, myId)

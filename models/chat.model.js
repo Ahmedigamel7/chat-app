@@ -5,8 +5,8 @@ const Schema = mongoose.Schema;
 const chatSchema = new Schema(
      {
           users: { type: [{ type: ObjectId, ref: "User" }], default: () => [] },
-          media: { type: [String], default: () => [] },
-          admins: { type: [{ type: ObjectId, default: () => "" }], default: () => [] },
+          media: { type: [{}], default: () => [] },
+          admins: { type: [{ type: ObjectId}], default: () => [] },
           group: {
                type: {
                     name: { type: String, default: ()=> ""},

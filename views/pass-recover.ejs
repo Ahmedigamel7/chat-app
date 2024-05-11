@@ -12,11 +12,11 @@
         <div class="recover-mid-1-1">
           <p>
             We can send a login code to:
-            <%= user.email %>
+            <%= email %>
           </p>
         </div>
         <div class="recover-mid-1-2">
-          <img src="/images/<%= user.image  %>" alt="default-profile-picture" />
+          <img src="/images/<%= image  %>" alt="default-profile-picture" />
         </div>
       </div>
     </div>
@@ -25,7 +25,7 @@
 
     <div class="fp-btns">
       <form action="/auth/login/recover-email" method="post">
-       <input type="hidden" name="email" value="<%= user.email %>">
+       <input type="hidden" name="email" value="<%= email %>">
       <button class="cancel-btn" type="button">
         <a href="/auth/login">Cancel</a>
       </button>

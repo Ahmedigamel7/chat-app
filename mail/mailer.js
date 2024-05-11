@@ -56,7 +56,7 @@ exports.send_pass_reset_email = async(email) =>{
         html: resetPassHtml,
 
     });
-    return info
+    return info;
 }
 
 

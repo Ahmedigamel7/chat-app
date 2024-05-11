@@ -6,6 +6,7 @@ exports.manageChat = (io,socket) => {
                socket.join(chatId);
           });
           socket.on("sendMessage", (msg, deleteMsg) => {
+               
                newMessage(msg)
                     .then((newMsg) => {
                          io.to(msg.chatId).emit("newMessage", newMsg);

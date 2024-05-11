@@ -6,12 +6,15 @@ const message = document.getElementById("message");
 const callBtn = document.getElementById("call");
 const chatMessages = document.querySelector(".chat-messages");
 let chatMessage = document.getElementById("chatMessage");
+const attachment = document.getElementById("attachment");
 const videoContainer = document.getElementById("video-container");
 const videoPlayer = document.getElementById("main-video");
+
 // const openButton = document.getElementById("call");
 const closeBtn = document.getElementById("close-video-btn");
 
 import { handle_friend_reqs } from "./funcs.js";
+
 handle_friend_reqs(socket);
 
 chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -31,21 +34,23 @@ function closeVideo() {
 
 socket.emit("joinChat", chatId);
 
+const attachmentBtn = document.querySelector("attachment-button");
+
 sendBtn.onclick = () => {
-  if (message.value.trim() !== "") {
-    let content = message.value;
+  let content = message.value.trim();
+  // const data = { chatId, sender: myId, files, content };
     socket.emit(
       "sendMessage",
       {
-        chatId,
-        content,
-        sender: myId,
+        data,
       },
       () => {
-        message.value = ``;
+        message.value = '';
+        attachment.value = "";
+
       }
     );
-  }
+  
 };
 
 socket.on("newMessage", (msg) => {
@@ -53,19 +58,23 @@ socket.on("newMessage", (msg) => {
   if (String(msg.senderId) !== myId) {
     chatMessage.innerHTML += `<div id="messageReceived" class="message received">
           <div class="message-header">
-          <img src="/images/${msg.image}" alt="friend-image" /> 
+          <img  src="/images/${msg.image}" alt="friend-image" /> 
           <span>${msg.time}</span>    
           </div>
-          <p> ${msg.content} </p>
-          </div> `;
+          <p> ${msg.content} </p>`;
+    // for (let file of attachment.files)
+    //   chatMessage.innerHTML += `<img class="file" src="/images/${file.name}" alt="attachment" />`;
+    chatMessage += '</div>';
   } else if (String(msg.senderId) === myId) {
     chatMessage.innerHTML += `<div id="messageSent" class="message sent">
           <div class="message-header">
           <img src="/images/${msg.image}" alt="friend-image" /> 
           <span>${msg.time}</span>    
           </div>
-          <p> ${msg.content} </p>
-          </div> `;
+          <p> ${msg.content} </p>`;
+    // for (let file of attachment.files)
+    //   chatMessage.innerHTML += `<img class="file" src="/images/${file.name}" alt="attachment" />`;
+    chatMessage += '</div>';
   }
   chatMessages.scrollTop = chatMessages.scrollHeight;
 });
@@ -77,11 +86,12 @@ socket.on("newMessage", (msg) => {
 // }
 
 function showCall(stream) {
-     let video = document.createElement("video");
-     video.srcObject = stream;
-     document.body.append(video);
-     video.play();
+  let video = document.createElement("video");
+  video.srcObject = stream;
+  document.body.append(video);
+  video.play();
 }
+
 let peer = new Peer();
 let peerId = null;
 peer.on("open", (id) => {
@@ -130,13 +140,11 @@ peer.on("call", (call) => {
 
       call.on("stream", function (remoteStream) {
         videoContainer.classList.remove("hidden");
-        videoPlayer.srcObject = remoteStream;
+        videoPlayer.srcObject = remoteStream; 
       });
       call.on("close", () => {
-
         const tracks = stream.getTracks();
         tracks.forEach((track) => track.stop());
-      
       });
     })
     .catch((err) => console.error(err));
@@ -180,6 +188,7 @@ function handleMove(event) {
 // Function to handle mouse up or touch end event on the document
 function handleEnd(event) {
   isDragging = false;
+
 }
 
 // Add event listeners to handle the dragging behavior
