@@ -3,13 +3,12 @@ const nodemailer = require('nodemailer');
 const CONTACT_PASS = process.env.CONTACT_PASS;
 const CONTACT_EMAIL = process.env.CONTACT_EMAIL;
 const { getCurrentGMTDate } = require("../helpers/time-formats")
-// const pass = 'B3Q@Z&qW*MgHF_3'
 
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
-    port: 465,
+    port: 587,
     // if false, port = 587 and if true, port = 465
-    secure: true,
+    secure: false,
     auth: {
         user: CONTACT_EMAIL,
         pass: CONTACT_PASS,
